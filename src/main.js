@@ -14,6 +14,14 @@ import App from './App'
 import store from './store'
 import router from './router'
 
+
+import './plugins/vcharts.js'
+// 挂载echarts
+import Echarts from 'echarts'
+import VueEcharts from 'vue-echarts'
+Vue.prototype.$echarts = Echarts
+Vue.component('v-chart',VueEcharts)
+
 import './icons' // icon
 import './permission' // permission control
 import './utils/error-log' // error log
