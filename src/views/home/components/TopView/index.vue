@@ -17,14 +17,14 @@
   </div>
 </template>
 <script>
-import TotalSales from "../TotalSales";
-import TotalOrders from "../TotalOrders";
-import TotalUsers from "../TotalUsers";
-import TodayUsers from "../TodayUsers";
+import TotalSales from '../TotalSales'
+import TotalOrders from '../TotalOrders'
+import TotalUsers from '../TotalUsers'
+import TodayUsers from '../TodayUsers'
 
 export default {
-  components: { TotalSales, TotalOrders,TodayUsers,TotalUsers},
-};
+  components: { TotalSales, TotalOrders, TodayUsers, TotalUsers }
+}
 </script>
 <style lang="scss" scoped>
 </style>

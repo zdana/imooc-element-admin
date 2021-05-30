@@ -10,7 +10,7 @@
         </template>
         <template>
           <div class="chart-wrapper">
-            <liquid-fill/>
+            <liquid-fill />
           </div>
         </template>
       </el-card>
@@ -20,7 +20,7 @@
         </template>
         <template>
           <div class="chart-wrapper">
-            <word-cloud/>
+            <word-cloud />
           </div>
         </template>
       </el-card>
@@ -28,14 +28,14 @@
   </div>
 </template>
 <script>
-import BMapScatter from "../BMapScatter";
-import LiquidFill from "../LiquidFill";
-import WordCloud from "../WordCloud";
+import BMapScatter from '../BMapScatter'
+import LiquidFill from '../LiquidFill'
+import WordCloud from '../WordCloud'
 export default {
   components: {
-    BMapScatter,LiquidFill,WordCloud
-  },
-};
+    BMapScatter, LiquidFill, WordCloud
+  }
+}
 </script>
 <style lang="scss" scoped>
 .map-view {

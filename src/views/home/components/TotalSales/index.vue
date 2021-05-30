@@ -4,29 +4,29 @@
       <div class="compare-wrapper">
         <div class="compare">
           <span>日同比</span>
-          <span class="emphasis">{{salesGrowthLastDay}}</span>
-          <div class="increase"/>
+          <span class="emphasis">{{ salesGrowthLastDay }}</span>
+          <div class="increase" />
         </div>
         <div class="compare">
           <span>月同比</span>
-          <span class="emphasis">{{salesGrowthLastMonth}}</span>
-          <div class="decrease"/>
+          <span class="emphasis">{{ salesGrowthLastMonth }}</span>
+          <div class="decrease" />
         </div>
       </div>
     </template>
     <template v-slot:footer>
       <span>昨日销售额</span>
-      <span class="emphasis">{{salesLastDay}}</span>
+      <span class="emphasis">{{ salesLastDay }}</span>
     </template>
   </common-card>
 </template>
 <script>
-import commonCardMixin from "@/mixins/commonCardMixin";
+import commonCardMixin from '@/mixins/commonCardMixin'
 // 封装接口中的data数据
-import commonDataMixin from "@/mixins/commonDataMixin";
+import commonDataMixin from '@/mixins/commonDataMixin'
 export default {
-  mixins: [commonCardMixin,commonDataMixin],
-};
+  mixins: [commonCardMixin, commonDataMixin]
+}
 </script>
 <style scoped lang="scss">
 .compare-wrapper {

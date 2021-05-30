@@ -5,52 +5,52 @@
     </template>
     <template v-slot:footer>
       <span>昨日订单量</span>
-      <span class="emphasis">{{orderLastDay}}</span>
+      <span class="emphasis">{{ orderLastDay }}</span>
     </template>
   </common-card>
 </template>
 <script>
-import commonCardMixin from "@/mixins/commonCardMixin";
-import commonDataMixin from "@/mixins/commonDataMixin";
+import commonCardMixin from '@/mixins/commonCardMixin'
+import commonDataMixin from '@/mixins/commonDataMixin'
 export default {
-  mixins: [commonCardMixin,commonDataMixin],
+  mixins: [commonCardMixin, commonDataMixin],
   methods: {
     getOptions() {
-      return this.orderTrend.length>0? {
+      return this.orderTrend.length > 0 ? {
         xAxis: {
-          type: "category",
+          type: 'category',
           show: false,
-          boundaryGap: false,
+          boundaryGap: false
         },
         yAxis: {
-          show: false,
+          show: false
         },
         series: [
           {
-            type: "line",
+            type: 'line',
             data: this.orderTrend,
             areaStyle: {
-              color: "purple",
+              color: 'purple'
             },
             lineStyle: {
-              width: 0,
+              width: 0
             },
             itemStyle: {
-              opacity: 0,
+              opacity: 0
             },
-            smooth: true,
-          },
+            smooth: true
+          }
         ],
         grid: {
           top: 0,
           left: 0,
           right: 0,
-          bottom: 0,
-        },
-      }:null
-    },
-  },
-};
+          bottom: 0
+        }
+      } : null
+    }
+  }
+}
 </script>
 <style scoped lang="scss">
 </style>

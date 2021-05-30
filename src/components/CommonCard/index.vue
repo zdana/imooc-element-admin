@@ -3,11 +3,11 @@
     <div class="title">{{ title }}</div>
     <div class="value">{{ value }}</div>
     <div class="chart">
-      <slot> </slot>
+      <slot />
     </div>
     <div class="line" />
     <div class="total">
-      <slot name="footer"></slot>
+      <slot name="footer" />
     </div>
   </div>
 </template>
@@ -15,9 +15,9 @@
 export default {
   props: {
     title: String,
-    value: [String,Number],
-  },
-};
+    value: [String, Number]
+  }
+}
 </script>
 <style lang="scss" scoped>
 .title {

@@ -1,11 +1,11 @@
 import request from '../utils/request2'
 
 // 具体地址
-export function wordCloud(){
+export function wordCloud() {
   return request({
-    url:'/screen/wordcloud',
+    url: '/screen/wordcloud',
     // get请求
-    method:'get',
+    method: 'get'
     // params:{
     //   a:1
     // }
@@ -16,23 +16,23 @@ export function wordCloud(){
     // }
   })
 }
-export function mapScatter(){
+export function mapScatter() {
   return request({
-    url:'/screen/map/scatter',
-    methods:'get' 
-  })
-}
- 
-export function screenData(){
-  return request({
-    url:'/screen/data',
-    methods:'get' 
+    url: '/screen/map/scatter',
+    methods: 'get'
   })
 }
 
-export function mapData(){
+export function screenData() {
   return request({
-    url:'/screen/map',
-    methods:'get' 
+    url: '/screen/data',
+    methods: 'get'
+  })
+}
+
+export function mapData() {
+  return request({
+    url: '/screen/map',
+    methods: 'get'
   })
 }

@@ -10,12 +10,12 @@
             <div class="chart-inner">
               <div class="chart">
                 <div class="chart-title">搜索用户数</div>
-                <div class="chart-data">{{userCount }}</div>
+                <div class="chart-data">{{ userCount }}</div>
                 <v-chart :options="searchUserOption" />
               </div>
               <div class="chart">
                 <div class="chart-title">搜索量</div>
-                <div class="chart-data">{{searchCount}}</div>
+                <div class="chart-data">{{ searchCount }}</div>
                 <v-chart :options="searchNumberOption" />
               </div>
             </div>
@@ -46,8 +46,8 @@
             <div class="title">分类销售排行</div>
             <div class="radio-wrapper">
               <el-radio-group v-model="radioSelect" size="small" @change="onCategoryChange">
-                <el-radio-button label="品类"></el-radio-button>
-                <el-radio-button label="商品"></el-radio-button>
+                <el-radio-button label="品类" />
+                <el-radio-button label="商品" />
               </el-radio-group>
             </div>
           </div>
@@ -63,216 +63,216 @@
 </template>
 
 <script>
-  import commonDataMixin from '@/mixins/commonDataMixin'
+import commonDataMixin from '@/mixins/commonDataMixin'
 
-  const colors = ['#8d7fec', '#5085f2', '#f8726b', '#e7e702', '#78f283', '#4bc1fc']
+const colors = ['#8d7fec', '#5085f2', '#f8726b', '#e7e702', '#78f283', '#4bc1fc']
 
-  export default {
-    mixins: [commonDataMixin],
-    data() {
-      return {
-        searchUserOption: {},
-        searchNumberOption: {},
-        tableData: [],
-        totalData: [],
-        total: 0,
-        pageSize: 4,
-        userCount: 0,
-        searchCount: 0,
-        radioSelect: '品类',
-        categoryOptions: {}
-      }
-    },
-    methods: {
-      onCategoryChange(type) {
-        this.radioSelect = type
-        this.renderPieChart()
-      },
-      onPageChange(page) {
-        this.renderTable(page)
-      },
-      renderPieChart() {
-        if (!this.category1.data1 || !this.category2.data1) {
-          return
-        }
-        let data
-        let axis
-        let total = 0
-        if (this.radioSelect === '品类') {
-          data = this.category1.data1.slice(0, 6)
-          axis = this.category1.axisX.slice(0, 6)
-          total = data.reduce((s, i) => s + i, 0)
-        } else {
-          data = this.category2.data1.slice(0, 6)
-          axis = this.category2.axisX.slice(0, 6)
-          total = data.reduce((s, i) => s + i, 0)
-        }
-        const chartData = []
-        data.forEach((item, index) => {
-          const percent = `${(item / total * 100).toFixed(2)}%`
-          chartData.push({
-            legendname: axis[index],
-            value: item,
-            percent,
-            itemStyle: {
-              color: colors[index]
-            },
-            name: `${axis[index]} | ${percent}`
-          })
+export default {
+  mixins: [commonDataMixin],
+  data() {
+    return {
+      searchUserOption: {},
+      searchNumberOption: {},
+      tableData: [],
+      totalData: [],
+      total: 0,
+      pageSize: 4,
+      userCount: 0,
+      searchCount: 0,
+      radioSelect: '品类',
+      categoryOptions: {}
+    }
+  },
+  watch: {
+    wordCloud() {
+      const totalData = []
+      this.wordCloud.forEach((item, index) => {
+        totalData.push({
+          id: index + 1,
+          rank: index + 1,
+          keyword: item.word,
+          count: item.count,
+          users: item.user,
+          range: `${((item.user / item.count) * 100).toFixed(2)}%`
         })
-        this.categoryOptions = {
-          title: [{
-            text: `${this.radioSelect}分布`,
-            textStyle: {
-              fontSize: 14,
-              color: '#666'
-            },
-            left: 20,
-            top: 20
-          }, {
-            text: '累计订单量',
-            subtext: total,
-            x: '34.5%',
-            y: '42.5%',
-            textStyle: {
-              fontSize: 14,
-              color: '#999'
-            },
-            subtextStyle: {
-              fontSize: 28,
-              color: '#333'
-            },
-            textAlign: 'center'
-          }],
-          series: [{
-            name: '品类分布',
-            type: 'pie',
-            data: chartData,
-            label: {
-              normal: {
-                show: true,
-                position: 'outter',
-                formatter: function (params) {
-                  return params.data.legendname
-                }
+      })
+      this.totalData = totalData
+      this.total = this.totalData.length
+      this.renderTable(1)
+      // reduce需要传入两个值，第一个是累加的值，第二个是起始值
+      // 改成千分位的方法：过滤器的方法只限于vue2版本，vue3不再支持
+      this.userCount = this.format(totalData.reduce((s, i) => i.users + s, 0))
+      this.searchCount = this.format(totalData.reduce((s, i) => i.count + s, 0))
+      this.renderLineChart()
+    },
+    category1() {
+      this.renderPieChart()
+    }
+  },
+  mounted() {
+    this.renderPieChart()
+  },
+  methods: {
+    onCategoryChange(type) {
+      this.radioSelect = type
+      this.renderPieChart()
+    },
+    onPageChange(page) {
+      this.renderTable(page)
+    },
+    renderPieChart() {
+      if (!this.category1.data1 || !this.category2.data1) {
+        return
+      }
+      let data
+      let axis
+      let total = 0
+      if (this.radioSelect === '品类') {
+        data = this.category1.data1.slice(0, 6)
+        axis = this.category1.axisX.slice(0, 6)
+        total = data.reduce((s, i) => s + i, 0)
+      } else {
+        data = this.category2.data1.slice(0, 6)
+        axis = this.category2.axisX.slice(0, 6)
+        total = data.reduce((s, i) => s + i, 0)
+      }
+      const chartData = []
+      data.forEach((item, index) => {
+        const percent = `${(item / total * 100).toFixed(2)}%`
+        chartData.push({
+          legendname: axis[index],
+          value: item,
+          percent,
+          itemStyle: {
+            color: colors[index]
+          },
+          name: `${axis[index]} | ${percent}`
+        })
+      })
+      this.categoryOptions = {
+        title: [{
+          text: `${this.radioSelect}分布`,
+          textStyle: {
+            fontSize: 14,
+            color: '#666'
+          },
+          left: 20,
+          top: 20
+        }, {
+          text: '累计订单量',
+          subtext: total,
+          x: '34.5%',
+          y: '42.5%',
+          textStyle: {
+            fontSize: 14,
+            color: '#999'
+          },
+          subtextStyle: {
+            fontSize: 28,
+            color: '#333'
+          },
+          textAlign: 'center'
+        }],
+        series: [{
+          name: '品类分布',
+          type: 'pie',
+          data: chartData,
+          label: {
+            normal: {
+              show: true,
+              position: 'outter',
+              formatter: function(params) {
+                return params.data.legendname
               }
-            },
-            center: ['35%', '50%'],
-            radius: ['45%', '60%'],
-            labelLine: {
-              normal: {
-                length: 5,
-                length2: 3,
-                smooth: true
-              }
-            },
-            clockwise: false,
-            itemStyle: {
-              borderWidth: 4,
-              borderColor: '#fff'
-            }
-          }],
-          legend: {
-            type: 'scroll',
-            orient: 'vertical',
-            height: 250,
-            left: '70%',
-            top: 'middle',
-            textStyle: {
-              color: '#8c8c8c'
             }
           },
-          tooltip: {
-            trigger: 'item',
-            formatter: function (params) {
-              const str = params.seriesName + '<br />' +
+          center: ['35%', '50%'],
+          radius: ['45%', '60%'],
+          labelLine: {
+            normal: {
+              length: 5,
+              length2: 3,
+              smooth: true
+            }
+          },
+          clockwise: false,
+          itemStyle: {
+            borderWidth: 4,
+            borderColor: '#fff'
+          }
+        }],
+        legend: {
+          type: 'scroll',
+          orient: 'vertical',
+          height: 250,
+          left: '70%',
+          top: 'middle',
+          textStyle: {
+            color: '#8c8c8c'
+          }
+        },
+        tooltip: {
+          trigger: 'item',
+          formatter: function(params) {
+            const str = params.seriesName + '<br />' +
                 params.marker + params.data.legendname + '<br />' +
                 '数量：' + params.data.value + '<br />' +
                 '占比：' + params.data.percent + '%'
-              return str
-            }
+            return str
           }
         }
-      },
-      renderTable(page) {
-        // 数值分页
-        this.tableData = this.totalData.slice(
-          (page - 1) * this.pageSize,
-          (page - 1) * this.pageSize + this.pageSize
-        )
-      },
-      renderLineChart() {
-        const createOption = (key) => {
-          const data = []
-          const axis = []
-          this.wordCloud.forEach(item => data.push(item[key]))
-          this.wordCloud.forEach(item => axis.push(item.word))
-          return {
-            xAxis: {
-              type: 'category',
-              boundaryGap: false,
-              data: axis
+      }
+    },
+    renderTable(page) {
+      // 数值分页
+      this.tableData = this.totalData.slice(
+        (page - 1) * this.pageSize,
+        (page - 1) * this.pageSize + this.pageSize
+      )
+    },
+    renderLineChart() {
+      const createOption = (key) => {
+        const data = []
+        const axis = []
+        this.wordCloud.forEach(item => data.push(item[key]))
+        this.wordCloud.forEach(item => axis.push(item.word))
+        return {
+          xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: axis
+          },
+          yAxis: {
+            show: false
+          },
+          tooltip: {},
+          series: [{
+            type: 'line',
+            data,
+            areaStyle: {
+              color: 'rgba(95,187,255,.5)'
             },
-            yAxis: {
-              show: false
+            lineStyle: {
+              color: 'rgb(95,187,255)'
             },
-            tooltip: {},
-            series: [{
-              type: 'line',
-              data,
-              areaStyle: {
-                color: 'rgba(95,187,255,.5)'
-              },
-              lineStyle: {
-                color: 'rgb(95,187,255)'
-              },
-              itemStyle: {
-                opacity: 0
-              },
-              smooth: true
-            }],
-            grid: {
-              top: 0,
-              left: 0,
-              bottom: 0,
-              right: 0
-            }
+            itemStyle: {
+              opacity: 0
+            },
+            smooth: true
+          }],
+          grid: {
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0
           }
         }
-        this.searchUserOption = createOption('user')
-        this.searchNumberOption = createOption('count')
       }
-    },
-    mounted() {
-      this.renderPieChart()
-    },
-    watch: {
-      wordCloud() {
-        const totalData = []
-        this.wordCloud.forEach((item, index) => {
-          totalData.push({
-            id: index + 1,
-            rank: index + 1,
-            keyword: item.word,
-            count: item.count,
-            users: item.user,
-            range: `${((item.user / item.count) * 100).toFixed(2)}%`
-          })
-        })
-        this.totalData = totalData
-        this.total = this.totalData.length
-        this.renderTable(1)
-        // reduce需要传入两个值，第一个是累加的值，第二个是起始值
-        // 改成千分位的方法：过滤器的方法只限于vue2版本，vue3不再支持
-        this.userCount = this.format(totalData.reduce((s, i) => i.users + s, 0))
-        this.searchCount = this.format(totalData.reduce((s, i) => i.count + s, 0))
-        this.renderLineChart()
-      },
-      category1() {
-        this.renderPieChart()
-      }
+      this.searchUserOption = createOption('user')
+      this.searchNumberOption = createOption('count')
     }
   }
+}
 </script>
 
 <style lang="scss" scoped>
